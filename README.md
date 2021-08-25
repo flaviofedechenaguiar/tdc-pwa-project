@@ -15,4 +15,4 @@ Para executar a aplicação será necessário rodas o seguinte comando na pasta 
 npm install
 node src/app.js
 ```
-No Navegador acesse a url [localhost:3030](http://localhost:3030)
+No Navegador acesse a url [http://localhost:3030](http://localhost:3030)
