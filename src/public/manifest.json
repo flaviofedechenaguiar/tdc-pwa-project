@@ -1,0 +1,21 @@
+{
+    "name": "PokeAPI App TDC",
+    "short_name": "PokeTDC",
+    "description": "App para demonstação de como é desenvolvida uma aplicação PWA",
+    "icons": [
+        {
+            "src": "pokeball128128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "pokeball256256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#0651AC",
+    "background_color": "#0651AC"
+}

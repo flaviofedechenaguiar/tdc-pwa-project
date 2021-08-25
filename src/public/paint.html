@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint Offline</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-sizing: border-box;
+    }
+
+    #container #options {
+        height: 4rem;
+        background: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #container #options input {
+        height: 2rem;
+        font-size: 1rem;
+        margin-right: 1rem;
+        margin-left: 0.2rem;
+    }
+
+    #container #board {
+        height: calc(100vh - 4rem);
+    }
+
+    @media(max-width: 425px) {
+        #container #options {
+            flex-direction: column;
+            height: 8rem;
+        }
+
+        #container #board {
+            height: calc(100vh - 8rem);
+        }
+    }
+</style>
+
+<body>
+    <div id="container">
+        <div id="options">
+            <div>
+                <label for="red">Vermelho</label>
+                <input type="number" id="red" name="red" onchange="setColor()" value="23" min="0" max="255">
+            </div>
+            <div>
+                <label for="green">Verde</label>
+                <input type="number" id="green" name="green" onchange="setColor()" value="23" min="0" max="255">
+            </div>
+            <div>
+                <label for="blue">Azul</label>
+                <input type="number" id="blue" name="blue" onchange="setColor()" value="23" min="0" max="255">
+            </div>
+            <div>
+                <label for="size">Tamanho</label>
+                <select id="size" name="size" onchange="setSize()">
+                    <option value="0.5">MICRO</option>
+                    <option selected value="1">PEQUENO</option>
+                    <option value="2">MEDIO</option>
+                    <option value="3">GRANDE</option>
+                </select>
+            </div>
+        </div>
+        <div id="board"></div>
+    </div>
+</body>
+<script>
+    let COLOR = "";
+    let SIZE = "";
+    let BOARD = document.querySelector('#board');
+
+    const getColors = () => {
+        const red = document.querySelector("#red").value;
+        const green = document.querySelector("#green").value;
+        const blue = document.querySelector("#blue").value;
+        return { red, green, blue }
+    }
+
+    const setColor = () => {
+        const { red, green, blue } = getColors();
+        COLOR = `rgb(${red}, ${green}, ${blue})`
+        document.querySelector("#options").style['background'] = COLOR;
+    }
+    setColor();
+
+
+    const setSize = () => {
+        const size = document.querySelector('#size');
+        SIZE = size.value;
+    }
+    setSize();
+
+    const renderColor = ({ clientX, clientY }) => {
+        const divElement = document.createElement('div');
+        divElement.style['background'] = COLOR;
+        divElement.style['width'] = `${SIZE}rem`;
+        divElement.style['height'] = `${SIZE}rem`;
+        divElement.style['border-radius'] = '100%'
+        divElement.style['position'] = 'absolute';
+        divElement.style['left'] = `${clientX - (SIZE / 2)}px`;
+        divElement.style['top'] = `${clientY - (SIZE / 2)}px`;
+        BOARD.appendChild(divElement);
+    }
+
+    const eventPaint = (event) => {
+        const { type } = event;
+        if (type === 'mousemove') {
+            const { clientX, clientY } = event;
+            renderColor({ clientX, clientY });
+            return
+        }
+        const { clientX, clientY } = event.touches[0];
+        renderColor({ clientX, clientY });
+    }
+
+    const addEventPaint = (strEvent) => {
+        if (strEvent === 'mouse') {
+            BOARD.addEventListener('mousemove', eventPaint);
+            return
+        }
+        BOARD.addEventListener('touchmove', eventPaint);
+    }
+
+    const removeEventPaint = (strEvent) => {
+        if (strEvent === 'mouse') {
+            BOARD.removeEventListener('mousemove', eventPaint);
+            return
+        }
+        BOARD.addEventListener('touchmove', eventPaint);
+    }
+
+    BOARD.addEventListener('mousedown', (event) => {
+        addEventPaint('mouse');
+    });
+
+    BOARD.addEventListener('mouseup', (event) => {
+        removeEventPaint('mouse');
+    })
+
+    BOARD.addEventListener("touchstart", (event) => {
+        addEventPaint('touch');
+    });
+
+    BOARD.addEventListener("touchend", (event) => {
+        removeEventPaint('touch');
+    });
+
+</script>
+
+</html>
